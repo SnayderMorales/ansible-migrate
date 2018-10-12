@@ -7,6 +7,9 @@
 - name: 1. install Apache
   apt: name=apache2 state=present
 
+- name: 1. install Apache
+  apt: name=git state=present
+
 - name: 2. install PHP module for Apache
   apt: name = {{item}} state=present
   with_items :

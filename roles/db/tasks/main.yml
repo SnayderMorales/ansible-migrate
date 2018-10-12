@@ -3,16 +3,16 @@
 
 #Cambiar yum por apt
 - name: Install Mysql package
-  apt: name={{ item }} state=installed
+  apt: name={{ item }} state=present
   with_items:
-   - mysql-server
-   - MySQL-python
-   - libselinux-python
-   - libsemanage-python
+   - mariadb-server
 
-- name: Configure SELinux to start mysql on any port
-  seboolean: name=mysql_connect_any state=true persistent=yes
-  when: sestatus.rc != 0
+
+- name: Install mysql extension for php
+  apt: name = {{item}} state:present
+  with_items:
+    - php5-mysql
+
 
 - name: Create Mysql configuration file
   template: src=my.cnf.j2 dest=/etc/my.cnf
@@ -20,12 +20,8 @@
   - restart mysql
 
 - name: Start Mysql Service
-  service: name=mysqld state=started enabled=yes
+  service: name=mysql state=started enabled=yes
 
-- name: insert iptables rule
-  lineinfile: dest=/etc/sysconfig/iptables state=present regexp="{{ mysql_port }}"
-              insertafter="^:OUTPUT " line="-A INPUT -p tcp  --dport {{ mysql_port }} -j  ACCEPT"
-  notify: restart iptables
 
 - name: Create Application Database
   mysql_db: name={{ dbname }} state=present
