@@ -3,24 +3,14 @@
 #Cambiar yum por apt
 #lib-semanage es para centos ubuntu es python-semanage y
 #libselinux-python por python-selinux
-- name: Install http and php etc
-  apt: name={{ item }} state=present update_cache=yes
-  with_items:
-   - httpd
-   - php
-   - php-mysql
-   - git
-   - python-semanage
-   - python-selinux
 
-- name: insert iptables rule for httpd
-  lineinfile: dest=/etc/sysconfig/iptables create=yes state=present regexp="{{ httpd_port }}" insertafter="^:OUTPUT "
-              line="-A INPUT -p tcp  --dport {{ httpd_port }} -j  ACCEPT"
-  notify: restart iptables
+- name: 1. install Apache
+  apt: name=apache2 state=present
 
-- name: http service state
-  service: name=httpd state=started enabled=yes
+- name: 2. install PHP module for Apache
+  apt: name = {{item}} state=present
+  with_items :
+    -libapache2-mod-php5
 
-- name: Configure SELinux to allow httpd to connect to remote database
-  seboolean: name=httpd_can_network_connect_db state=true persistent=yes
-  when: sestatus.rc != 0
+- name: 3. start Apache
+  service: name=apache2 state=started enabled=yes
