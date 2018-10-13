@@ -1,3 +1,7 @@
+Create docker with 
+
+./create_dockers.sh server:16.04
+
 Building a simple LAMP stack and deploying Application using Ansible Playbooks.
 -------------------------------------------
 
