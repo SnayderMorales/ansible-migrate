@@ -1,19 +1,19 @@
 ---
 # This playbook will install mysql and create db user and give permissions.
 
-#Cambiar yum por apt
+#Cambiar yum por apt y mysql-server por mariadb
 - name: Install Mysql package
   apt: name={{ item }} state=present
   with_items:
    - mariadb-server
 
-
+#Cambie todas las librerias que tenia de python por php5-mysql
 - name: Install mysql extension for php
   apt: name = {{item}} state:present
   with_items:
     - php5-mysql
 
-
+#Cambie el nombre del servicio mysqld por mysql
 - name: Create Mysql configuration file
   template: src=my.cnf.j2 dest=/etc/my.cnf
   notify:
@@ -22,7 +22,7 @@
 - name: Start Mysql Service
   service: name=mysql state=started enabled=yes
 
-
+#Quite la regla iptables
 - name: Create Application Database
   mysql_db: name={{ dbname }} state=present
 
