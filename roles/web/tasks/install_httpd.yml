@@ -1,13 +1,13 @@
 ---
 # These tasks install http and the php modules.
-#Cambiar yum por apt
+#Cambiar yum por apt y http por apache2
 #lib-semanage es para centos ubuntu es python-semanage y
 #libselinux-python por python-selinux
 
 - name: 1. install Apache
   apt: name=apache2 state=present
 
-- name: 1. install Apache
+- name: 1. install Git
   apt: name=git state=present
 
 - name: 2. install PHP module for Apache
